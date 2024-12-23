@@ -1,0 +1,79 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Workout Category</title>
+    <style>
+        body{
+            background-image: url('{% static "images/gym1.jpg" %}');
+            width: 90%;
+            height: 90vh;
+            background-size: cover;
+            position: relative;
+            color: aliceblue;
+            font-family: "Open Sans", sans-serif;
+        }
+        .head{
+            margin-top: 30px;
+            padding-left: 50px;
+            color: #ffcc00;
+        }
+        
+        .category-container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 300px;
+            padding-left: 100px;
+        }
+
+        .workout-box, .category-card {
+            display: inline-block;
+            margin: 25px;
+            padding: 25px;
+            font-size: 16px;
+            color: aliceblue;
+            border: 1px solid white;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+    
+        .workout-box:hover, .category-card:hover {
+            border-color:unset;
+            color: #ffcc00;
+            transform: scale(1.1);
+        }
+        
+        h1, h2 {
+            margin: 20px;
+        }
+        
+        ul {
+            list-style-type: none;
+        }
+        
+    </style>
+
+</head>
+<body>
+
+    <div class="head">
+        <h1 >All Workout Category </h1>
+    </div>
+    
+    <div class="category-container">
+        <a href="{% url 'groq_ai_query' %}" class="category-card">
+            <h2>Beginner</h2>
+        </a>
+        <a href="{% url 'groq_ai_query' %}" class="category-card">
+            <h2>Intermediate</h2>
+        </a>
+        <a href="{% url 'groq_ai_query' %}" class="category-card">
+            <h2>Extreme</h2>
+        </a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ room.name }} - Chat Room</title>
+    <style>
+        /* General Page Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('{% static "images/gym1.jpg" %}');
+            background-size: cover;
+            position: relative;
+            color: #ffffff;
+        }
+
+        /* Headers */
+        h1, h2 {
+            text-align: center;
+            color: #758bdb; /* Discord blue */
+            margin: 20px 0;
+        }
+
+        /* Chat Rooms List */
+        ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        ul li {
+            margin: 10px 0;
+        }
+
+        ul li a {
+            text-decoration: none;
+            color: #00bcd4;
+            font-weight: bold;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        ul li a:hover {
+            color: #4dc0d8;
+        }
+
+        /* Create Room Link */
+        a {
+            display: block;
+            text-align: center;
+            margin: 20px auto;
+            color: #00bcd4;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #4dc0d8;
+            text-decoration: underline;
+        }
+
+        /* Messages Container */
+        #messages {
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(235, 231, 231, 0.5); /* Discord card background */
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            height: 400px;
+            overflow-y: auto; /* Scrollable message area */
+            box-sizing: border-box;
+        }
+
+        #messages p {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #40444b; /* Slightly lighter for messages */
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Message Input Forms */
+        form {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        textarea, input[type="file"] {
+            width: 790px;
+            margin-left: 180px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            margin-right: 10px;
+            background-color: rgba(235, 231, 231, 0.5);
+            color: black;
+            resize: none;
+        }
+
+        button {
+            background-color: #7289da; /* Discord blue */
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+            width: 150px;
+        }
+
+        button:hover {
+            background-color: #5b6eae;
+        }
+
+        /* Share GIF Form */
+        input[type="file"] {
+            background-color: rgba(235, 231, 231, 0.5);
+            color: #ffffff;
+            padding: 5px;
+            height: 50px;
+            width: 800px;
+            margin-left: 180px;
+        }
+        .rr{
+            text-decoration: none;
+            font-size: 25px;
+            color: #758bdb;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Welcome to GymPass Chat</h1>
+    <h2>Chat Rooms:</h2>
+    <ul>
+        {% for room in rooms %}
+            <li><a href="{% url 'chatroom' room_name=room.name %}">{{ room.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <a class="rr" href="{% url 'createroom' %}"> Create a new room</a>
+    
+    <h1>{{ room.name }} - Chat Room</h1>
+    <div id="messages">
+        {% for message in messages %}
+            <p><strong>{{ message.user.username }}:</strong> {{ message.content }}</p>
+        {% endfor %}
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <textarea name="message" placeholder="Type your message"></textarea>
+        <button type="submit">Send</button>
+    </form>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="gif" accept="image/gif" />
+        <button type="submit">Share GIF</button>
+    </form>
+</body>
+</html>
+
+

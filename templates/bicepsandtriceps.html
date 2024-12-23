@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biceps & Triceps - {{ level|title }} Plan</title>
+
+</head>
+<body>
+    <h1>Biceps & Triceps Workout - {{ level|title }} Level</h1>
+    <ul>
+        {% for exercise in plan %}
+            <li>{{ exercise }}</li>
+        {% empty %}
+            <li>No workout plan available for this level.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

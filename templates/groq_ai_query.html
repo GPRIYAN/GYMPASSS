@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GYMPASS AI </title>
+    <style>
+        /* General Page Styling */
+        body {
+            background-image: url('{% static "images/gym1.jpg" %}');
+            background-size: cover;
+            position: relative; /* Light Black Background */
+            color: #ffffff; /* White text */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container Styling */
+        .container {
+            width: 60%;
+            max-width: 800px;
+            background-color: rgb(51, 51, 51,0.8); /* Slightly lighter black */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Title Styling */
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #00bcd4; /* Accent cyan color */
+        }
+
+        /* Input Field Styling */
+        input[type="text"] {
+            width: calc(100% - 80px);
+            padding: 10px;
+            height: 35px;
+            border: none;
+            border-radius: 5px;
+            margin-left: 30px;
+            font-size: 18px;
+        }
+
+        /* Button Styling */
+        button {
+            padding: 10px 15px;
+            margin-left: 30px;
+            width: 100px;
+            height: 45px;
+            font-size: 18px;
+            background-color: #00bcd4;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0097a7;
+        }
+
+        /* Response Box */
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #444444; /* Dark gray */
+            border-left: 4px solid #00bcd4;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            color: #e0e0e0;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GYMPASS AI</h1>
+        <form method="POST" action="/query-groq">
+            {% csrf_token %}
+            <input type="text" name="question" placeholder="Message Gympass AI..." required>
+            <br>
+            <br>
+            <button type="submit">Send</button>
+        </form>
+        <div class="response">
+            <!-- Replace 'content' dynamically with Groq's response -->
+            {{ content }}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Room</title>
+</head>
+<body>
+    <h1>Create a New Chat Room</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="room_name" placeholder="Enter room name" required>
+        <button type="submit">Create Room</button>
+    </form>
+    <a href="{% url 'chatroom' room_name='default' %}">Back to Chat</a>
+</body>
+</html>
