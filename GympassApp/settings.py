@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-2h=w+#6c2sphh=1a=0u@61r3q4!kwa(gnzqx2u)bxj^_qwtu3v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['gympasss.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
