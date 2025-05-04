@@ -7,7 +7,6 @@ from GymApp.models import Contact,MembershipPlan,Trainer,Enrollment,Gallery,Atte
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from .Services import call_groq_api
-from agora_token_builder import RtcTokenBuilder
 import time
 import os
 
