@@ -27,19 +27,13 @@ Login
     <form action="/login" method="post">{% csrf_token %}
     
         <div class="form-group">
-            <input type="number" class="form-control mb-2" name="usernumber" placeholder="Phone Number" required>
-            </div>
-
-
-   
+          <input type="email" class="form-control mb-2" name="email" placeholder="Email" required>
+        </div>
     
-    
-    <div class="form-group">
-    <input type="password" class="form-control mt-2" name="pass1" placeholder="Password" required>
-    </div>
-    
-   
-    <br>
+        <div class="form-group">
+          <input type="password" class="form-control mt-2" name="pass1" placeholder="Password" required>
+        </div>
+      <br>
     
     
     <div class="d-grid gap-2">

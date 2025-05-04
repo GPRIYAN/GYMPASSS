@@ -3,10 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
-from GymApp.models import Contact,MembershipPlan,Trainer,Enrollment,Gallery,Attendance, Room, Topic, Message
-from django.http import HttpResponse
+from GymApp.models import Contact,MembershipPlan,Trainer,Enrollment,Gallery,Attendance, Room, Topic, Message, VideoMeeting
+from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from .Services import call_groq_api
+from agora_token_builder import RtcTokenBuilder
+import time
+import os
 
 # Create your views here.
 def Home(request):
@@ -49,63 +52,66 @@ def profile(request):
 
 
 def signup(request):
-    if request.method=="POST":
-        username=request.POST.get('usernumber')
-        email=request.POST.get('email')
-        pass1=request.POST.get('pass1')
-        pass2=request.POST.get('pass2')
-      
-        if len(username)>10 or len(username)<10:
-            messages.info(request,"Phone Number Must be 10 Digits")
+    if request.method == "POST":
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        pass1 = request.POST.get('pass1', '')
+        pass2 = request.POST.get('pass2', '')
+
+        if not username or not email or not pass1 or not pass2:
+            messages.error(request, "All fields are required.")
             return redirect('/signup')
 
-        if pass1!=pass2:
-            messages.info(request,"Password is not Matching")
+        if len(username) < 3 or len(username) > 30:
+            messages.info(request, "Username must be between 3 and 30 characters.")
             return redirect('/signup')
-       
-        try:
-            if User.objects.get(username=username):
-                messages.warning(request,"Phone Number is Taken")
-                return redirect('/signup')
-           
-        except Exception as identifier:
-            pass
-        
-        
-        try:
-            if User.objects.get(email=email):
-                messages.warning(request,"Email is Taken")
-                return redirect('/signup')
-           
-        except Exception as identifier:
-            pass
-        
-        
-        
-        myuser=User.objects.create_user(username,email,pass1)
+
+        if pass1 != pass2:
+            messages.info(request, "Passwords do not match.")
+            return redirect('/signup')
+
+        if len(pass1) < 8:
+            messages.warning(request, "Password must be at least 8 characters long.")
+            return redirect('/signup')
+
+        if User.objects.filter(username=username).exists():
+            messages.warning(request, "Username is already taken.")
+            return redirect('/signup')
+
+        if User.objects.filter(email=email).exists():
+            messages.warning(request, "Email is already taken.")
+            return redirect('/signup')
+
+        # Create user
+        myuser = User.objects.create_user(username=username, email=email, password=pass1)
         myuser.save()
-        messages.success(request,"User is Created Please Login")
+        messages.success(request, "User created successfully. Please login.")
         return redirect('/login')
-        
-        
-    return render(request,"signup.html")
 
+    return render(request, "signup.html")
 
 def handlelogin(request):
-    if request.method=="POST":        
-        username=request.POST.get('usernumber')
-        pass1=request.POST.get('pass1')
-        myuser=authenticate(username=username,password=pass1)
-        if myuser is not None:
-            login(request,myuser)
-            messages.success(request,"Login Successful")
+    if request.method == "POST":
+        email = request.POST.get('email', '').strip()
+        pass1 = request.POST.get('pass1', '')
+
+        try:
+            user_obj = User.objects.get(email=email)
+            username = user_obj.username  # Get username from email
+        except User.DoesNotExist:
+            messages.error(request, "User with this email does not exist.")
+            return redirect('/login')
+
+        user = authenticate(username=username, password=pass1)
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Login successful.")
             return redirect('/')
         else:
-            messages.error(request,"Invalid Credentials")
+            messages.error(request, "Invalid email or password.")
             return redirect('/login')
-            
-        
-    return render(request,"handlelogin.html")
+
+    return render(request, "handlelogin.html")
 
 
 def handleLogout(request):
@@ -223,3 +229,20 @@ def chat_with_groq(request):
 
     # Handle GET request by rendering the empty form
     return render(request, 'groq_ai_query.html', {'content': ''})
+
+def dashboard(request):
+    return render(request, 'dashboard.html', {'name': request.user.username})
+
+def videocall(request):
+    return render(request, 'videocall.html', {'name': request.user.username})
+
+def join_room(request):
+    if request.method == 'POST':
+        roomID = request.POST['roomID']
+        return redirect("/meeting?roomID=" + roomID)
+    return render(request, 'joinroom.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect("/login")
+
